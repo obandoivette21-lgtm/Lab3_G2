@@ -10,7 +10,7 @@
     <ion-list>
       <ion-item>
         <ion-label>Liga</ion-label>
-        <ion-select placeholder="Selecciona una Liga" (ionChange)="cambioLiga($event)">
+        <ion-select placeholder="Selecciona una Liga" [value]="ligaSeleccionada" (ionChange)="cambioLiga($event)">
           <ion-select-option *ngFor="let liga of ligas" [value]="liga.idLeague">
             {{ liga.strLeagueAlternate || liga.strLeague }}
           </ion-select-option>
@@ -19,7 +19,7 @@
 
       <ion-item *ngIf="ligaSeleccionada">
         <ion-label>Temporada</ion-label>
-        <ion-select placeholder="Selecciona una Temporada" (ionChange)="cambioTemporada($event)">
+        <ion-select placeholder="Selecciona una Temporada" [value]="temporadaSeleccionada" (ionChange)="cambioTemporada($event)">
           <ion-select-option *ngFor="let temp of temporadas" [value]="temp.strSeason">
             {{ temp.strSeason }}
           </ion-select-option>

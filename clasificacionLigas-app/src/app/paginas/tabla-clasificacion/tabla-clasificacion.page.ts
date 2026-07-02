@@ -16,6 +16,7 @@ import {
   IonList, 
   IonSpinner 
 } from '@ionic/angular/standalone';
+import { Preferences } from '@capacitor/preferences';
 import { ClasificationService } from '../../servicios/clasificacion.servicio';
 import { ILeague } from '../../modelos/liga.model';
 import { ISeason } from '../../modelos/temporada.model';
@@ -64,9 +65,10 @@ export class TablaClasificacionPage implements OnInit {
   cargarLigas() {
     this.cargando = true;
     this.service.getFootballLeagues().subscribe({
-      next: (data) => {
+      next: async (data) => {
         this.ligas = data;
         this.cargando = false;
+        await this.cargarSeleccionGuardada();
       },
       error: () => {
         this.cargando = false;
@@ -74,12 +76,50 @@ export class TablaClasificacionPage implements OnInit {
     });
   }
 
-  cambioLiga(event: any) {
+  async cargarSeleccionGuardada() {
+    const { value: savedLeague } = await Preferences.get({ key: 'liga' });
+    const { value: savedSeason } = await Preferences.get({ key: 'temporada' });
+
+    if (savedLeague) {
+      this.ligaSeleccionada = savedLeague;
+      this.cargando = true;
+      this.service.getSeasons(savedLeague).subscribe({
+        next: (seasonsData) => {
+          this.temporadas = seasonsData;
+          this.cargando = false;
+          
+          if (savedSeason && seasonsData.some(s => s.strSeason === savedSeason)) {
+            this.temporadaSeleccionada = savedSeason;
+            this.cargando = true;
+            this.service.getTableClasification(savedLeague, savedSeason).subscribe({
+              next: (tableData) => {
+                this.tabla = tableData;
+                this.cargando = false;
+              },
+              error: () => {
+                this.cargando = false;
+              }
+            });
+          }
+        },
+        error: () => {
+          this.cargando = false;
+        }
+      });
+    }
+  }
+
+  async cambioLiga(event: any) {
     const idLiga = event.detail.value;
+    if (this.ligaSeleccionada === idLiga) return;
+    
     this.ligaSeleccionada = idLiga;
     this.temporadas = [];
     this.tabla = [];
     this.temporadaSeleccionada = '';
+    
+    await Preferences.set({ key: 'liga', value: idLiga });
+    await Preferences.remove({ key: 'temporada' });
     
     if (idLiga) {
       this.cargando = true;
@@ -95,10 +135,14 @@ export class TablaClasificacionPage implements OnInit {
     }
   }
 
-  cambioTemporada(event: any) {
+  async cambioTemporada(event: any) {
     const season = event.detail.value;
+    if (this.temporadaSeleccionada === season) return;
+    
     this.temporadaSeleccionada = season;
     this.tabla = [];
+    
+    await Preferences.set({ key: 'temporada', value: season });
     
     if (this.ligaSeleccionada && season) {
       this.cargando = true;
