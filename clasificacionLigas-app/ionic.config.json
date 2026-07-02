@@ -1,0 +1,7 @@
+{
+  "name": "clasificacionLigas-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

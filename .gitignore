@@ -1,0 +1,9 @@
+.vs/
+*.user
+[Bb]in/
+[Oo]bj/
+node_modules/
+.angular/
+www/
+dist/
+tmp/
