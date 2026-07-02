@@ -1,11 +1,57 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title>Clasificación de Ligas</ion-title>
+    <ion-title>Clasificación de {{ 'sagiL' | reverse }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="main-container">
-    <p>Esqueleto inicial de la tabla de clasificación (30% entregable).</p>
+    
+    <ion-list>
+      <ion-item>
+        <ion-label>Liga</ion-label>
+        <ion-select placeholder="Selecciona una Liga" (ionChange)="cambioLiga($event)">
+          <ion-select-option *ngFor="let liga of ligas" [value]="liga.idLeague">
+            {{ liga.strLeagueAlternate || liga.strLeague }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item *ngIf="ligaSeleccionada">
+        <ion-label>Temporada</ion-label>
+        <ion-select placeholder="Selecciona una Temporada" (ionChange)="cambioTemporada($event)">
+          <ion-select-option *ngFor="let temp of temporadas" [value]="temp.strSeason">
+            {{ temp.strSeason }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+
+    <div *ngIf="cargando" class="spinner-container">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <div *ngIf="!cargando && tabla.length > 0" class="tabla-container">
+      <ion-grid>
+        <ion-row class="header-row">
+          <ion-col size="2">Pos</ion-col>
+          <ion-col size="5">Equipo</ion-col>
+          <ion-col size="1.5">PJ</ion-col>
+          <ion-col size="1.5">DG</ion-col>
+          <ion-col size="2">Pts</ion-col>
+        </ion-row>
+
+        <ion-row *ngFor="let fila of tabla" class="data-row">
+          <ion-col size="2" class="rank-col">{{ fila.intRank }}</ion-col>
+          <ion-col size="5" class="team-col">
+            <img [src]="fila.strBadge" class="team-badge" alt="Escudo" />
+            <span class="team-name">{{ fila.strTeam }}</span>
+          </ion-col>
+          <ion-col size="1.5">{{ fila.intPlayed }}</ion-col>
+          <ion-col size="1.5">{{ fila.intGoalDifference }}</ion-col>
+          <ion-col size="2" class="points-col"><strong>{{ fila.intPoints }}</strong></ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
   </div>
 </ion-content>
