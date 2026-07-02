@@ -1,4 +1,73 @@
 .main-container {
-  padding: 16px;
+  padding: 10px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.tabla-container {
+  margin-top: 15px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-row {
+  background-color: #f4f5f8;
+  font-weight: bold;
+  border-bottom: 2px solid #dedede;
+  padding: 10px 0;
   text-align: center;
+  font-size: 0.9rem;
+}
+
+.data-row {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 8px 0;
+  align-items: center;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.data-row:hover {
+  background-color: #f9f9f9;
+}
+
+.data-row:last-child {
+  border-bottom: none;
+}
+
+.rank-col {
+  font-weight: bold;
+  color: #666;
+}
+
+.team-col {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  justify-content: flex-start;
+  padding-left: 8px;
+}
+
+.team-badge {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  object-fit: contain;
+}
+
+.team-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.points-col {
+  color: var(--ion-color-primary);
 }
